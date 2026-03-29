@@ -1,0 +1,441 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:var(--font-sans);padding:.75rem 0 1.5rem}
+.section-head{display:flex;align-items:center;gap:8px;margin:1.25rem 0 .6rem}
+.sh-line{flex:1;height:.5px;background:var(--color-border-tertiary)}
+.sh-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);white-space:nowrap;padding:0 8px}
+.sh-flag{font-size:13px}
+
+.match-card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:8px;overflow:hidden}
+.mc-head{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--color-background-secondary);border-bottom:.5px solid var(--color-border-tertiary)}
+.mc-time{font-size:11px;font-weight:500;color:var(--color-text-secondary);min-width:38px}
+.mc-teams{flex:1;font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.mc-context{font-size:10px;color:var(--color-text-tertiary);margin-left:auto}
+
+.odds-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 12px}
+.odd-box{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px}
+.odd-label{font-size:9px;color:var(--color-text-tertiary)}
+.odd-val{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.odd-box.best{background:var(--color-background-success);border:.5px solid var(--color-border-success)}
+.odd-box.best .odd-val{color:var(--color-text-success)}
+.odd-box.best .odd-label{color:var(--color-text-success)}
+
+.analysis{padding:0 12px 10px;display:flex;flex-direction:column;gap:5px}
+.anal-row{display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--color-text-secondary)}
+.anal-dot{width:5px;height:5px;border-radius:50%;background:var(--color-border-secondary);margin-top:4px;flex-shrink:0}
+.bet-tag{display:inline-flex;align-items:center;gap:5px;border-radius:var(--border-radius-md);padding:3px 9px;font-size:11px;font-weight:500;margin-top:4px}
+.bt-safe{background:var(--color-background-success);color:var(--color-text-success)}
+.bt-value{background:var(--color-background-info);color:var(--color-text-info)}
+.bt-goals{background:var(--color-background-warning);color:var(--color-text-warning)}
+
+.combo-card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.combo-top{padding:10px 14px 8px;border-bottom:.5px solid var(--color-border-tertiary)}
+.combo-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.combo-sub{font-size:10px;color:var(--color-text-tertiary)}
+.combo-legs{padding:6px 14px}
+.leg{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.leg:last-child{border-bottom:none}
+.leg-num{width:16px;height:16px;border-radius:50%;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:var(--color-text-secondary);flex-shrink:0}
+.leg-match{flex:1;font-size:11px;color:var(--color-text-secondary)}
+.leg-pick{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.leg-odd{font-size:11px;color:var(--color-text-tertiary);min-width:30px;text-align:right}
+.combo-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--color-background-secondary)}
+.cf-left{display:flex;flex-direction:column;gap:1px}
+.cf-label{font-size:9px;color:var(--color-text-tertiary)}
+.cf-val{font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.cf-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.cf-prob{font-size:14px;font-weight:500}
+.prob-high{color:var(--color-text-success)}
+.prob-mid{color:var(--color-text-warning)}
+.combo-advice{font-size:10px;color:var(--color-text-secondary);padding:6px 14px 8px;font-style:italic}
+.risk-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500}
+.rb-safe{background:var(--color-background-success);color:var(--color-text-success)}
+.rb-mid{background:var(--color-background-warning);color:var(--color-text-warning)}
+.rb-val{background:var(--color-background-info);color:var(--color-text-info)}
+
+.disclaimer{font-size:10px;color:var(--color-text-tertiary);padding:.75rem 0 0;border-top:.5px solid var(--color-border-tertiary);margin-top:.75rem;line-height:1.6}
+
+.tabs{display:flex;gap:3px;margin-bottom:1rem;border-bottom:.5px solid var(--color-border-tertiary)}
+.tab{padding:6px 14px;font-size:12px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font-sans)}
+.tab.active{color:var(--color-text-primary);border-bottom-color:var(--color-text-primary);font-weight:500}
+.sec{display:none}.sec.active{display:block}
+</style>
+
+<div class="w">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">
+  <div style="font-size:17px;font-weight:500;color:var(--color-text-primary)">Apuestas de hoy — 29 mar 2026</div>
+  <div style="width:6px;height:6px;border-radius:50%;background:#e24b4a;animation:pu 1.2s infinite;margin-left:4px"></div>
+  <style>@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}</style>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('partidos',this)">Partidos y cuotas</button>
+  <button class="tab" onclick="sw('combinadas',this)">Combinadas</button>
+</div>
+
+<!-- PARTIDOS -->
+<div class="sec active" id="sec-partidos">
+
+<div class="section-head">
+  <span class="sh-flag">🇪🇸</span>
+  <span class="sh-label">LaLiga Hypermotion — Jornada 32</span>
+  <div class="sh-line"></div>
+</div>
+
+<!-- Eibar vs Las Palmas -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">14:00</span>
+    <span class="mc-teams">SD Eibar vs UD Las Palmas</span>
+    <span class="mc-context">8º vs 6º tabla</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box best"><span class="odd-label">Eibar gana</span><span class="odd-val">2.35</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">3.00</span></div>
+    <div class="odd-box"><span class="odd-label">Las Palmas</span><span class="odd-val">3.10</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Eibar en casa es uno de los mejores locales de la categoría: 4 victorias en los últimos 5 en Ipurua y solo 11 goles encajados en casa en toda la temporada.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Las Palmas llega con bajas importantes y rinde peor a domicilio — le cuesta generar ocasiones fuera de Gran Canaria.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Historial muy igualado (4-4-3), pero la ventaja local y el momento del Eibar dan el fiel de la balanza.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-safe">Eibar gana o empata (DC) — @1.42</span>
+      <span class="bet-tag bt-goals">Menos de 2.5 goles — @1.65</span>
+    </div>
+  </div>
+</div>
+
+<!-- Leonesa vs Andorra -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">16:15</span>
+    <span class="mc-teams">Cultural Leonesa vs FC Andorra</span>
+    <span class="mc-context">13º vs 12º tabla</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box"><span class="odd-label">Leonesa</span><span class="odd-val">2.50</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">3.30</span></div>
+    <div class="odd-box best"><span class="odd-label">Andorra gana</span><span class="odd-val">2.60</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Partido muy equilibrado entre dos equipos de mitad de tabla sin presión de ascenso ni descenso.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Andorra tiene buena solidez defensiva como visitante — encadena solo 1 gol en contra en sus últimas 3 salidas.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-goals">Menos de 2.5 goles — @1.70</span>
+      <span class="bet-tag bt-value">Empate — valor a @3.30</span>
+    </div>
+  </div>
+</div>
+
+<!-- Zaragoza vs Racing -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">18:30</span>
+    <span class="mc-teams">Real Zaragoza vs Racing de Santander</span>
+    <span class="mc-context">9º vs 1º tabla (líder)</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box"><span class="odd-label">Zaragoza</span><span class="odd-val">2.86</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">3.40</span></div>
+    <div class="odd-box best"><span class="odd-label">Racing gana</span><span class="odd-val">2.50</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Racing lidera la Segunda con autoridad — cuota campeón 1.83 — y viene siendo el equipo más fiable de la temporada.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Zaragoza está en zona media, presionado por no poder arriesgarse a perder más puntos. El partido puede ser abierto.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Betfair destaca este partido como candidato a partido con goles: Zaragoza obligado a atacar + Racing que no especula.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-safe">Racing gana o empata (DC) — @1.55</span>
+      <span class="bet-tag bt-goals">Más de 2.5 goles — @2.10</span>
+    </div>
+  </div>
+</div>
+
+<!-- Almería vs Real Sociedad B -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">21:00</span>
+    <span class="mc-teams">UD Almería vs Real Sociedad B</span>
+    <span class="mc-context">4º vs 11º tabla</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box best"><span class="odd-label">Almería gana</span><span class="odd-val">1.55</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">4.00</span></div>
+    <div class="odd-box"><span class="odd-label">Sociedad B</span><span class="odd-val">5.50</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Almería acumula 4 victorias consecutivas como local — es uno de los equipos más fuertes en casa de la categoría.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>La Real Sociedad B encadena 5 victorias a domicilio en todas las competiciones, lo que paradójicamente puede hacer interesante el empate.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>La primera vuelta acabó 2-2 — duelo muy igualado pese a la diferencia de tabla.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-safe">Almería gana — @1.55</span>
+      <span class="bet-tag bt-goals">Ambos marcan (BTTS) — @1.85</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-head" style="margin-top:1.5rem">
+  <span class="sh-flag">🌍</span>
+  <span class="sh-label">Amistosos internacionales — Fecha FIFA</span>
+  <div class="sh-line"></div>
+</div>
+
+<!-- Colombia vs Francia -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">21:00</span>
+    <span class="mc-teams">Colombia vs Francia</span>
+    <span class="mc-context">Northwest Stadium, Maryland</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box"><span class="odd-label">Colombia</span><span class="odd-val">4.50</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">3.90</span></div>
+    <div class="odd-box best"><span class="odd-label">Francia gana</span><span class="odd-val">1.67</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Francia viene de ganar 2-1 a Brasil con Mbappé y Ekitike como autores — llega con gran estado de forma y se perfila como favorita al Mundial.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Colombia llega con la moral tocada tras perder el invicto de 9 partidos ante Croacia (1-0), aunque sigue siendo un rival muy peligroso.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Estadística clave: Francia lleva 10 partidos seguidos marcando 2 o más goles. Colombia ha marcado 2+ en 5 de sus últimos 6 partidos.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Prob. de más de 2.5 goles estimada en 69% — respaldada por el historial goleador de ambas selecciones.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-safe">Francia gana — @1.67</span>
+      <span class="bet-tag bt-goals">Más de 2.5 goles — @1.90</span>
+      <span class="bet-tag bt-value">Ambos marcan — @1.73</span>
+    </div>
+  </div>
+</div>
+
+<!-- Argentina vs Zambia -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">01:00</span>
+    <span class="mc-teams">Argentina vs Zambia</span>
+    <span class="mc-context">La Bombonera, Buenos Aires (+1)</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box best"><span class="odd-label">Argentina gana</span><span class="odd-val">1.18</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">6.50</span></div>
+    <div class="odd-box"><span class="odd-label">Zambia</span><span class="odd-val">14.00</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Messi y Argentina reciben a Zambia en la Bombonera — duelo sin historia real entre dos selecciones de niveles muy dispares.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Argentina ganó a Mauritania el viernes 27 y llega con confianza. Victoria con amplio margen es el escenario más probable.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-safe">Argentina gana — @1.18</span>
+      <span class="bet-tag bt-goals">Argentina +2.5 goles — @1.55</span>
+    </div>
+  </div>
+</div>
+
+<!-- Inglaterra vs Japón (referencia) -->
+<div class="match-card">
+  <div class="mc-head">
+    <span class="mc-time">14:30</span>
+    <span class="mc-teams">Escocia vs Japón</span>
+    <span class="mc-context">Amistoso — Hill Dickinson Stadium</span>
+  </div>
+  <div class="odds-row">
+    <div class="odd-box"><span class="odd-label">Escocia</span><span class="odd-val">3.20</span></div>
+    <div class="odd-box"><span class="odd-label">Empate</span><span class="odd-val">3.40</span></div>
+    <div class="odd-box best"><span class="odd-label">Japón gana</span><span class="odd-val">2.10</span></div>
+  </div>
+  <div class="analysis">
+    <div class="anal-row"><div class="anal-dot"></div><span>Japón, que no estará en el Mundial 2026, es superior técnicamente a Escocia en el momento actual — gran generación de jugadores en Europa.</span></div>
+    <div class="anal-row"><div class="anal-dot"></div><span>Partido abierto — Escocia siempre da guerra en casa, pero Japón tiene mayor calidad individual.</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+      <span class="bet-tag bt-value">Japón gana — valor @2.10</span>
+      <span class="bet-tag bt-goals">Más de 2.5 goles — @1.80</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- COMBINADAS -->
+<div class="sec" id="sec-combinadas">
+
+<!-- Combinada 1 -->
+<div class="combo-card">
+  <div class="combo-top">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="combo-title">Combinada Ultra Segura</div>
+      <span class="risk-badge rb-safe">Segura</span>
+    </div>
+    <div class="combo-sub">3 selecciones con mayor probabilidad estadística del día</div>
+  </div>
+  <div class="combo-legs">
+    <div class="leg">
+      <div class="leg-num">1</div>
+      <div class="leg-match">Almería vs Real Sociedad B · 2ª Div.</div>
+      <div class="leg-pick">Almería gana</div>
+      <div class="leg-odd">@1.55</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">2</div>
+      <div class="leg-match">Eibar vs Las Palmas · 2ª Div.</div>
+      <div class="leg-pick">Eibar gana o empata (DC)</div>
+      <div class="leg-odd">@1.42</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">3</div>
+      <div class="leg-match">Francia vs Colombia · Amistoso</div>
+      <div class="leg-pick">Francia gana</div>
+      <div class="leg-odd">@1.67</div>
+    </div>
+  </div>
+  <div class="combo-foot">
+    <div class="cf-left">
+      <span class="cf-label">Cuota combinada</span>
+      <span class="cf-val">@3.67</span>
+    </div>
+    <div class="cf-right">
+      <span class="cf-label">Prob. estimada</span>
+      <span class="cf-prob prob-high">~56%</span>
+    </div>
+  </div>
+  <div class="combo-advice">Almería es uno de los mejores locales de la categoría, el Eibar raramente pierde en Ipurua y Francia viene con excelente forma. Las tres selecciones tienen base estadística sólida.</div>
+</div>
+
+<!-- Combinada 2 -->
+<div class="combo-card">
+  <div class="combo-top">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="combo-title">Combinada de Goles</div>
+      <span class="risk-badge rb-mid">Media</span>
+    </div>
+    <div class="combo-sub">Apuesta a la tendencia goleadora de los partidos del día</div>
+  </div>
+  <div class="combo-legs">
+    <div class="leg">
+      <div class="leg-num">1</div>
+      <div class="leg-match">Francia vs Colombia · Amistoso</div>
+      <div class="leg-pick">Más de 2.5 goles</div>
+      <div class="leg-odd">@1.90</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">2</div>
+      <div class="leg-match">Zaragoza vs Racing · 2ª Div.</div>
+      <div class="leg-pick">Más de 2.5 goles</div>
+      <div class="leg-odd">@2.10</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">3</div>
+      <div class="leg-match">Almería vs Real Sociedad B</div>
+      <div class="leg-pick">Ambos marcan (BTTS)</div>
+      <div class="leg-odd">@1.85</div>
+    </div>
+  </div>
+  <div class="combo-foot">
+    <div class="cf-left">
+      <span class="cf-label">Cuota combinada</span>
+      <span class="cf-val">@7.37</span>
+    </div>
+    <div class="cf-right">
+      <span class="cf-label">Prob. estimada</span>
+      <span class="cf-prob prob-mid">~39%</span>
+    </div>
+  </div>
+  <div class="combo-advice">Francia lleva 10 partidos seguidos marcando 2+. Zaragoza y Racing son equipos verticales que generan mucho. La primera vuelta Almería-Sociedad B terminó 2-2.</div>
+</div>
+
+<!-- Combinada 3 -->
+<div class="combo-card">
+  <div class="combo-top">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="combo-title">Mini Doble Máxima Seguridad</div>
+      <span class="risk-badge rb-safe">Muy segura</span>
+    </div>
+    <div class="combo-sub">Solo 2 patas — máxima probabilidad, cuota razonable</div>
+  </div>
+  <div class="combo-legs">
+    <div class="leg">
+      <div class="leg-num">1</div>
+      <div class="leg-match">Argentina vs Zambia · Amistoso</div>
+      <div class="leg-pick">Argentina gana</div>
+      <div class="leg-odd">@1.18</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">2</div>
+      <div class="leg-match">Almería vs Real Sociedad B · 2ª Div.</div>
+      <div class="leg-pick">Almería gana</div>
+      <div class="leg-odd">@1.55</div>
+    </div>
+  </div>
+  <div class="combo-foot">
+    <div class="cf-left">
+      <span class="cf-label">Cuota combinada</span>
+      <span class="cf-val">@1.83</span>
+    </div>
+    <div class="cf-right">
+      <span class="cf-label">Prob. estimada</span>
+      <span class="cf-prob prob-high">~72%</span>
+    </div>
+  </div>
+  <div class="combo-advice">Argentina recibe a Zambia en la Bombonera — uno de los resultados más seguros del día. Complementado con el Almería líder en casa. Ideal para apuestas de bajo riesgo.</div>
+</div>
+
+<!-- Combinada 4 -->
+<div class="combo-card">
+  <div class="combo-top">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="combo-title">Combinada de Valor</div>
+      <span class="risk-badge rb-val">Valor</span>
+    </div>
+    <div class="combo-sub">Cuota alta con fundamentación estadística real</div>
+  </div>
+  <div class="combo-legs">
+    <div class="leg">
+      <div class="leg-num">1</div>
+      <div class="leg-match">Zaragoza vs Racing · 2ª Div.</div>
+      <div class="leg-pick">Racing gana o empata (DC)</div>
+      <div class="leg-odd">@1.55</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">2</div>
+      <div class="leg-match">Francia vs Colombia · Amistoso</div>
+      <div class="leg-pick">Ambos marcan</div>
+      <div class="leg-odd">@1.73</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">3</div>
+      <div class="leg-match">Escocia vs Japón · Amistoso</div>
+      <div class="leg-pick">Japón gana</div>
+      <div class="leg-odd">@2.10</div>
+    </div>
+    <div class="leg">
+      <div class="leg-num">4</div>
+      <div class="leg-match">Eibar vs Las Palmas · 2ª Div.</div>
+      <div class="leg-pick">Menos de 2.5 goles</div>
+      <div class="leg-odd">@1.65</div>
+    </div>
+  </div>
+  <div class="combo-foot">
+    <div class="cf-left">
+      <span class="cf-label">Cuota combinada</span>
+      <span class="cf-val">@9.28</span>
+    </div>
+    <div class="cf-right">
+      <span class="cf-label">Prob. estimada</span>
+      <span class="cf-prob prob-mid">~31%</span>
+    </div>
+  </div>
+  <div class="combo-advice">Racing es el líder indiscutible de la categoría. Japón tiene calidad superior a Escocia. El Eibar es uno de los equipos más defensivos del campeonato. Cuota final muy interesante.</div>
+</div>
+
+</div>
+
+<div class="disclaimer">
+  Apuesta siempre con responsabilidad. Las cuotas son orientativas y pueden variar según la casa de apuestas. Las probabilidades estimadas son propias y no garantizan el resultado. +18.
+</div>
+
+</div>
+
+<script>
+function sw(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
